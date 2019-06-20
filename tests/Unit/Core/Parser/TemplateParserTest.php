@@ -6,7 +6,6 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Compiler\StopCompilingException;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\Configuration;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
@@ -135,7 +134,7 @@ class TemplateParserTest extends UnitTestCase
         $compiler = $this->getMock(TemplateCompiler::class, ['store', 'get', 'has', 'isUncompilable']);
         $compiler->expects($this->never())->method('get');
         $compiler->expects($this->at(0))->method('has')->willReturn(false);
-        $compiler->expects($this->at(1))->method('store')->willThrowException(new StopCompilingException());
+        $compiler->expects($this->at(1))->method('store')->willThrowException(new \TYPO3Fluid\Fluid\Core\Exception());
         $compiler->expects($this->at(2))->method('store');
         $context->setTemplateCompiler($compiler);
         $context->setVariableProvider(new StandardVariableProvider());

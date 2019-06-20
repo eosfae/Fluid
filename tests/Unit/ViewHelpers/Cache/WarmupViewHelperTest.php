@@ -6,7 +6,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Cache;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Compiler\StopCompilingChildrenException;
+use TYPO3Fluid\Fluid\Core\Exception;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
@@ -36,7 +36,7 @@ class WarmupViewHelperTest extends ViewHelperBaseTestcase
         $subject->setRenderingContext($renderingContext);
         $viewHelperNode = $this->getMock(ViewHelperNode::class, ['dummy'], [], '', false);
         $initializationCode = '';
-        $this->setExpectedException(StopCompilingChildrenException::class);
+        $this->setExpectedException(Exception::class);
         $subject->compile(
             'argumentName',
             'closureName',

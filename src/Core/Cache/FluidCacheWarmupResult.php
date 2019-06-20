@@ -6,7 +6,6 @@ namespace TYPO3Fluid\Fluid\Core\Cache;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Compiler\FailedCompilingState;
 use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
 
 /**
@@ -62,10 +61,6 @@ class FluidCacheWarmupResult
             static::RESULT_HASLAYOUT => $state->hasLayout(),
             static::RESULT_COMPILEDCLASS => $state->getIdentifier()
         ];
-        if ($state instanceof FailedCompilingState) {
-            $this->results[$templatePathAndFilename][static::RESULT_FAILURE] = $state->getFailureReason();
-            $this->results[$templatePathAndFilename][static::RESULT_MITIGATIONS] = $state->getMitigations();
-        }
         return $this;
     }
 }

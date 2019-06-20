@@ -7,7 +7,6 @@ namespace TYPO3Fluid\Fluid\Core\Rendering;
  */
 
 use TYPO3Fluid\Fluid\Core\Cache\FluidCacheInterface;
-use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\ErrorHandler\ErrorHandlerInterface;
 use TYPO3Fluid\Fluid\Core\ErrorHandler\StandardErrorHandler;
 use TYPO3Fluid\Fluid\Core\Parser\Configuration;
@@ -88,11 +87,6 @@ class RenderingContext implements RenderingContextInterface
     protected $templateParser;
 
     /**
-     * @var TemplateCompiler
-     */
-    protected $templateCompiler;
-
-    /**
      * @var FluidCacheInterface
      */
     protected $cache;
@@ -130,7 +124,6 @@ class RenderingContext implements RenderingContextInterface
     {
         $this->view = $view;
         $this->setTemplateParser(new TemplateParser());
-        $this->setTemplateCompiler(new TemplateCompiler());
         $this->setTemplatePaths(new TemplatePaths());
         $this->setTemplateProcessors(
             [
@@ -273,24 +266,6 @@ class RenderingContext implements RenderingContextInterface
     public function getTemplateParser()
     {
         return $this->templateParser;
-    }
-
-    /**
-     * @param TemplateCompiler $templateCompiler
-     * @return void
-     */
-    public function setTemplateCompiler(TemplateCompiler $templateCompiler)
-    {
-        $this->templateCompiler = $templateCompiler;
-        $this->templateCompiler->setRenderingContext($this);
-    }
-
-    /**
-     * @return TemplateCompiler
-     */
-    public function getTemplateCompiler()
-    {
-        return $this->templateCompiler;
     }
 
     /**

@@ -6,6 +6,7 @@ namespace TYPO3Fluid\Fluid\Core\Compiler;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\BooleanParser;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
@@ -210,7 +211,7 @@ class NodeConverter
             ) . chr(10);
 
             $initializationPhpCode .= $argumentInitializationCode . $viewHelperInitializationPhpCode;
-        } catch (StopCompilingChildrenException $stopCompilingChildrenException) {
+        } catch (Exception $stopCompilingChildrenException) {
             $convertedViewHelperExecutionCode = '\'' . $stopCompilingChildrenException->getReplacementString() . '\'';
         }
         $initializationArray = [
@@ -357,7 +358,7 @@ class NodeConverter
      */
     protected function convertExpressionNode(ExpressionNodeInterface $node)
     {
-        return $node->compile($this->templateCompiler);
+        return [];
     }
 
     /**

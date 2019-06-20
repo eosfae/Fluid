@@ -6,7 +6,7 @@ namespace TYPO3Fluid\Fluid\ViewHelpers\Cache;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Compiler\StopCompilingChildrenException;
+use TYPO3Fluid\Fluid\Core\Exception;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
@@ -96,9 +96,6 @@ class StaticViewHelper extends AbstractViewHelper
         ViewHelperNode $node,
         TemplateCompiler $compiler
     ) {
-        $renderedString = $node->evaluateChildNodes($this->renderingContext);
-        $stopCompilingChildrenException = new StopCompilingChildrenException();
-        $stopCompilingChildrenException->setReplacementString($renderedString);
-        throw $stopCompilingChildrenException;
+        throw new Exception('Prior StopCompilingChildrenException()');
     }
 }

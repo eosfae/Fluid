@@ -10,9 +10,7 @@ namespace TYPO3Fluid\Fluid\Core\ErrorHandler;
  * Class StandardErrorHandler
  *
  * Implements the default type of error handling for
- * Fluid, which means all exceptions are thrown except
- * for the StopCompilingException which is tolerated
- * (as a means to forcibly disable caching).
+ * Fluid, which means all exceptions are thrown
  */
 class StandardErrorHandler implements ErrorHandlerInterface
 {
@@ -47,10 +45,10 @@ class StandardErrorHandler implements ErrorHandlerInterface
     }
 
     /**
-     * @param \TYPO3Fluid\Fluid\Core\Compiler\StopCompilingException $error
+     * @param \TYPO3Fluid\Fluid\Core\Exception $error
      * @return void
      */
-    public function handleCompilerError(\TYPO3Fluid\Fluid\Core\Compiler\StopCompilingException $error)
+    public function handleCompilerError(\TYPO3Fluid\Fluid\Core\Exception $error)
     {
     }
 

@@ -40,10 +40,10 @@ interface ErrorHandlerInterface
      * but if your application deems compiler errors fatal then
      * you can throw a different exception type here).
      *
-     * @param \TYPO3Fluid\Fluid\Core\Compiler\StopCompilingException $error
+     * @param \TYPO3Fluid\Fluid\Core\Exception $error
      * @return string
      */
-    public function handleCompilerError(\TYPO3Fluid\Fluid\Core\Compiler\StopCompilingException $error);
+    public function handleCompilerError(\TYPO3Fluid\Fluid\Core\Exception $error);
 
     /**
      * @param \TYPO3Fluid\Fluid\View\Exception $error

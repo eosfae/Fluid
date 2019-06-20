@@ -6,9 +6,9 @@ namespace TYPO3Fluid\Fluid\Core\Compiler;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
@@ -125,7 +125,7 @@ class TemplateCompiler
      */
     public function disable()
     {
-        throw new StopCompilingException('Compiling stopped');
+        throw new Exception('Compiling stopped');
     }
 
     /**

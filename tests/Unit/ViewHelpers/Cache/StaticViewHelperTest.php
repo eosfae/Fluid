@@ -6,7 +6,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Cache;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Compiler\StopCompilingChildrenException;
+use TYPO3Fluid\Fluid\Core\Exception;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
@@ -42,7 +42,7 @@ class StaticViewHelperTest extends ViewHelperBaseTestcase
             ->getMock();
         $node->expects($this->once())->method('evaluateChildNodes');
         $compiler = new TemplateCompiler();
-        $this->setExpectedException(StopCompilingChildrenException::class);
+        $this->setExpectedException(Exception::class);
         $code = '';
         $subject->compile('test', 'test', $code, $node, $compiler);
     }

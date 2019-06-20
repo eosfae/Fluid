@@ -7,7 +7,6 @@ namespace TYPO3Fluid\Fluid\Core\Rendering;
  */
 
 use TYPO3Fluid\Fluid\Core\Cache\FluidCacheInterface;
-use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\ErrorHandler\ErrorHandlerInterface;
 use TYPO3Fluid\Fluid\Core\Parser\Configuration;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
@@ -95,17 +94,6 @@ interface RenderingContextInterface
      * @return TemplateParser
      */
     public function getTemplateParser();
-
-    /**
-     * @param TemplateCompiler $templateCompiler
-     * @return void
-     */
-    public function setTemplateCompiler(TemplateCompiler $templateCompiler);
-
-    /**
-     * @return TemplateCompiler
-     */
-    public function getTemplateCompiler();
 
     /**
      * @return TemplatePaths

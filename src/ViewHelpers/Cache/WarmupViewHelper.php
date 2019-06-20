@@ -6,7 +6,7 @@ namespace TYPO3Fluid\Fluid\ViewHelpers\Cache;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Compiler\StopCompilingChildrenException;
+use TYPO3Fluid\Fluid\Core\Exception;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
@@ -131,10 +131,7 @@ class WarmupViewHelper extends AbstractViewHelper
         TemplateCompiler $compiler
     ) {
         $originalVariableProvider = static::overlayVariablesIfNotSet($this->renderingContext, $this->arguments);
-        $stopCompilingChildrenException = new StopCompilingChildrenException();
-        $stopCompilingChildrenException->setReplacementString($this->renderChildren());
-        $this->renderingContext->setVariableProvider($originalVariableProvider);
-        throw $stopCompilingChildrenException;
+        throw new Exception('Prior StopCompilingChildrenException()');
     }
 
     /**

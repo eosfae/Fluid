@@ -6,9 +6,7 @@ namespace TYPO3Fluid\Fluid\Core\Parser;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Compiler\StopCompilingException;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
-use TYPO3Fluid\Fluid\Core\Compiler\UncompilableTemplateInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionException;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionNodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ParseTimeEvaluatedExpressionNodeInterface;
@@ -182,14 +180,11 @@ class TemplateParser
             $parsedTemplate = $this->parsedTemplates[$templateIdentifier];
         } elseif ($compiler->has($templateIdentifier)) {
             $parsedTemplate = $compiler->get($templateIdentifier);
-            if ($parsedTemplate instanceof UncompilableTemplateInterface) {
-                $parsedTemplate = $this->parseTemplateSource($templateIdentifier, $templateSourceClosure);
-            }
         } else {
             $parsedTemplate = $this->parseTemplateSource($templateIdentifier, $templateSourceClosure);
             try {
                 $compiler->store($templateIdentifier, $parsedTemplate);
-            } catch (StopCompilingException $stop) {
+            } catch (\TYPO3Fluid\Fluid\Core\Exception $stop) {
                 $this->renderingContext->getErrorHandler()->handleCompilerError($stop);
                 $parsedTemplate->setCompilable(false);
                 $compiler->store($templateIdentifier, $parsedTemplate);

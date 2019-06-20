@@ -6,9 +6,8 @@ namespace TYPO3Fluid\Fluid\Core\Cache;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Compiler\FailedCompilingState;
-use TYPO3Fluid\Fluid\Core\Compiler\StopCompilingException;
 use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
+use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionException;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
@@ -257,7 +256,7 @@ class StandardCacheWarmer implements FluidCacheWarmerInterface
      */
     protected function warmSingleFile($templatePathAndFilename, $identifier, RenderingContextInterface $renderingContext)
     {
-        $parsedTemplate = new FailedCompilingState();
+        $parsedTemplate = new ParsingState();
         $parsedTemplate->setVariableProvider($renderingContext->getVariableProvider());
         $parsedTemplate->setCompilable(false);
         $parsedTemplate->setIdentifier($identifier);
@@ -266,57 +265,18 @@ class StandardCacheWarmer implements FluidCacheWarmerInterface
                 $identifier,
                 $this->createClosure($templatePathAndFilename)
             );
-        } catch (StopCompilingException $error) {
-            $parsedTemplate->setFailureReason(sprintf('Compiling is intentionally disabled. Specific reason unknown. Message: "%s"', $error->getMessage()));
-            $parsedTemplate->setMitigations([
-                'Can be caused by specific ViewHelpers. If this is is not intentional: avoid ViewHelpers which disable caches.',
-                'If cache is intentionally disabled: consider using `f:cache.static` to cause otherwise uncompilable ViewHelpers\' output to be replaced with a static string in compiled templates.'
-            ]);
         } catch (ExpressionException $error) {
-            $parsedTemplate->setFailureReason(sprintf('ExpressionNode evaluation error: %s', $error->getMessage()));
-            $parsedTemplate->setMitigations([
-                'Emulate variables used in ExpressionNode using `f:cache.warmup` or assign in warming RenderingContext'
-            ]);
+
         } catch (\TYPO3Fluid\Fluid\Core\Parser\Exception $error) {
-            $parsedTemplate->setFailureReason($error->getMessage());
-            $parsedTemplate->setMitigations([
-                'Fix possible syntax errors.',
-                'Check that all ViewHelpers are correctly referenced and namespaces loaded (note: namespaces may be added externally!)',
-                'Check that all ExpressionNode types used by the template are loaded (note: may depend on RenderingContext implementation!)',
-                'Emulate missing variables used in expressions by using `f:cache.warmup` around your template code.'
-            ]);
+
         } catch (\TYPO3Fluid\Fluid\Core\ViewHelper\Exception $error) {
-            $parsedTemplate->setFailureReason(sprintf('ViewHelper threw Exception: %s', $error->getMessage()));
-            $parsedTemplate->setMitigations([
-                'Emulate missing variables using `f:cache.warmup` around failing ViewHelper.',
-                'Emulate globals / context required by ViewHelper.',
-                'Disable caching for template if ViewHelper depends on globals / context that cannot be emulated.'
-            ]);
+
         } catch (\TYPO3Fluid\Fluid\Core\Exception $error) {
-            $parsedTemplate->setFailureReason(sprintf('Fluid engine error: %s', $error->getMessage()));
-            $parsedTemplate->setMitigations([
-                'Search online for additional information about specific error.'
-            ]);
+
         } catch (Exception $error) {
-            $parsedTemplate->setFailureReason(sprintf('Fluid view error: %s', $error->getMessage()));
-            $parsedTemplate->setMitigations([
-                'Investigate reported error in View class for missing variable checks, missing configuration etc.',
-                'Consider using a different View class for rendering in warmup mode (a custom rendering context can provide it)'
-            ]);
+
         } catch (\RuntimeException $error) {
-            $parsedTemplate->setFailureReason(
-                sprintf(
-                    'General error: %s line %s threw %s (code: %d)',
-                    get_class($error),
-                    $error->getFile(),
-                    $error->getLine(),
-                    $error->getMessage(),
-                    $error->getCode()
-                )
-            );
-            $parsedTemplate->setMitigations([
-                'There are no automated suggestions for mitigating this issue. An online search may yield more information.'
-            ]);
+
         }
         return $parsedTemplate;
     }

@@ -6,9 +6,7 @@ namespace TYPO3Fluid\Fluid\Core\ViewHelper;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
@@ -122,38 +120,6 @@ interface ViewHelperInterface
      * @return string the resulting string which is directly shown
      */
     public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext);
-
-    /**
-     * This method is called on compilation time.
-     *
-     * It has to return a *single* PHP statement without semi-colon or newline
-     * at the end, which will be embedded at various places.
-     *
-     * Furthermore, it can append PHP code to the variable $initializationPhpCode.
-     * In this case, all statements have to end with semi-colon and newline.
-     *
-     * Outputting new variables
-     * ========================
-     * If you want create a new PHP variable, you need to use
-     * $templateCompiler->variableName('nameOfVariable') for this, as all variables
-     * need to be globally unique.
-     *
-     * Return Value
-     * ============
-     * Besides returning a single string, it can also return the constant
-     * \TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler::SHOULD_GENERATE_VIEWHELPER_INVOCATION
-     * which means that after the $initializationPhpCode, the ViewHelper invocation
-     * is built as normal. This is especially needed if you want to build new arguments
-     * at run-time, as it is done for the AbstractConditionViewHelper.
-     *
-     * @param string $argumentsName Name of the variable in which the ViewHelper arguments are stored
-     * @param string $closureName Name of the closure which can be executed to render the child nodes
-     * @param string $initializationPhpCode
-     * @param ViewHelperNode $node
-     * @param TemplateCompiler $compiler
-     * @return string
-     */
-    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler);
 
     /**
      * Called when being inside a cached template.

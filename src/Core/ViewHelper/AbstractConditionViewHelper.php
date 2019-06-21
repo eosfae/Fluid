@@ -6,7 +6,6 @@ namespace TYPO3Fluid\Fluid\Core\ViewHelper;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
@@ -209,46 +208,5 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
         }
 
         return $elseNode instanceof ViewHelperNode ? $elseNode->evaluate($this->renderingContext) : '';
-    }
-
-    /**
-     * The compiled ViewHelper adds two new ViewHelper arguments: __thenClosure and __elseClosure.
-     * These contain closures which are be executed to render the then(), respectively else() case.
-     *
-     * @param string $argumentsName
-     * @param string $closureName
-     * @param string $initializationPhpCode
-     * @param ViewHelperNode $node
-     * @param TemplateCompiler $compiler
-     * @return string
-     */
-    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
-    {
-        $thenViewHelperEncountered = $elseViewHelperEncountered = false;
-        foreach ($node->getChildNodes() as $childNode) {
-            if ($childNode instanceof ViewHelperNode) {
-                $viewHelperClassName = $childNode->getViewHelperClassName();
-                if (substr($viewHelperClassName, -14) === 'ThenViewHelper') {
-                    $thenViewHelperEncountered = true;
-                    $childNodesAsClosure = $compiler->wrapChildNodesInClosure($childNode);
-                    $initializationPhpCode .= sprintf('%s[\'__thenClosure\'] = %s;', $argumentsName, $childNodesAsClosure) . chr(10);
-                } elseif (substr($viewHelperClassName, -14) === 'ElseViewHelper') {
-                    $elseViewHelperEncountered = true;
-                    $childNodesAsClosure = $compiler->wrapChildNodesInClosure($childNode);
-                    $initializationPhpCode .= sprintf('%s[\'__elseClosures\'][] = %s;', $argumentsName, $childNodesAsClosure) . chr(10);
-                    $arguments = $childNode->getArguments();
-                    if (isset($arguments['if'])) {
-                        // The "else" has an argument, indicating it has a secondary (elseif) condition.
-                        // Compile a closure which will evaluate the condition.
-                        $elseIfConditionAsClosure = $compiler->wrapViewHelperNodeArgumentEvaluationInClosure($childNode, 'if');
-                        $initializationPhpCode .= sprintf('%s[\'__elseifClosures\'][] = %s;', $argumentsName, $elseIfConditionAsClosure) . chr(10);
-                    }
-                }
-            }
-        }
-        if (!$thenViewHelperEncountered && !$elseViewHelperEncountered && !isset($node->getArguments()['then'])) {
-            $initializationPhpCode .= sprintf('%s[\'__thenClosure\'] = %s;', $argumentsName, $closureName) . chr(10);
-        }
-        return parent::compile($argumentsName, $closureName, $initializationPhpCode, $node, $compiler);
     }
 }

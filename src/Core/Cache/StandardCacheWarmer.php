@@ -266,17 +266,17 @@ class StandardCacheWarmer implements FluidCacheWarmerInterface
                 $this->createClosure($templatePathAndFilename)
             );
         } catch (ExpressionException $error) {
-
+            throw new \TYPO3Fluid\Fluid\Core\Exception('ExpressionException (used to be failedCompilingState) - ' . $error->getMessage());
         } catch (\TYPO3Fluid\Fluid\Core\Parser\Exception $error) {
-
+            throw new \TYPO3Fluid\Fluid\Core\Exception('Parser/Exception (used to be failedCompilingState) - ' . $error->getMessage());
         } catch (\TYPO3Fluid\Fluid\Core\ViewHelper\Exception $error) {
-
+            throw new \TYPO3Fluid\Fluid\Core\Exception('ViewHelper/Exception (used to be failedCompilingState) - ' . $error->getMessage());
         } catch (\TYPO3Fluid\Fluid\Core\Exception $error) {
-
+            throw new \TYPO3Fluid\Fluid\Core\Exception('Core/Exception (used to be failedCompilingState) - ' . $error->getMessage());
         } catch (Exception $error) {
-
+            throw new \TYPO3Fluid\Fluid\Core\Exception('View/Exception (used to be failedCompilingState) - ' . $error->getMessage());
         } catch (\RuntimeException $error) {
-
+            throw new \TYPO3Fluid\Fluid\Core\Exception('Runtimeexception (used to be failedCompilingState) - ' . $error->getMessage());
         }
         return $parsedTemplate;
     }

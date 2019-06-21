@@ -7,7 +7,6 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering;
  */
 
 use TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache;
-use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessorInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
@@ -80,7 +79,6 @@ class RenderingContextTest extends UnitTestCase
             ['templatePaths', $this->getMock(TemplatePaths::class)],
             ['cache', $this->getMock(SimpleFileCache::class)],
             ['templateParser', $this->getMock(TemplateParser::class)],
-            ['templateCompiler', $this->getMock(TemplateCompiler::class)],
             ['templateProcessors', [$this->getMock(TemplateProcessorInterface::class), $this->getMock(TemplateProcessorInterface::class)]]
         ];
     }

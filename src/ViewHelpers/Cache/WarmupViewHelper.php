@@ -6,9 +6,6 @@ namespace TYPO3Fluid\Fluid\ViewHelpers\Cache;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Exception;
-use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\ChainedVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
@@ -107,31 +104,6 @@ class WarmupViewHelper extends AbstractViewHelper
         $content = $this->renderChildren();
         $this->renderingContext->setVariableProvider($originalVariableProvider);
         return $content;
-    }
-
-    /**
-     * Custom implementation of compile method. Performns variable
-     * provider overlaying, calls renderChildren and throws a
-     * StopCompilingChildren with a static replacement string attached.
-     *
-     * TemplateCompiler then inserts this string as a static string in
-     * the compiled template (and stops compiling all child nodes).
-     *
-     * @param string $argumentsName
-     * @param string $closureName
-     * @param string $initializationPhpCode
-     * @param ViewHelperNode $node
-     * @param TemplateCompiler $compiler
-     */
-    public function compile(
-        $argumentsName,
-        $closureName,
-        &$initializationPhpCode,
-        ViewHelperNode $node,
-        TemplateCompiler $compiler
-    ) {
-        $originalVariableProvider = static::overlayVariablesIfNotSet($this->renderingContext, $this->arguments);
-        throw new Exception('Prior StopCompilingChildrenException()');
     }
 
     /**

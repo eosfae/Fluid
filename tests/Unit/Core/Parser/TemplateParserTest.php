@@ -6,7 +6,6 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\Configuration;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\InterceptorInterface;
@@ -119,31 +118,6 @@ class TemplateParserTest extends UnitTestCase
         $templateParser->setRenderingContext($context);
         $result = $templateParser->parse('source1')->render($context);
         $this->assertEquals('final', $result);
-    }
-
-    /**
-     * @test
-     */
-    public function getOrParseAndStoreTemplateSetsAndStoresUncompilableStateInCache()
-    {
-        $parsedTemplate = new ParsingState();
-        $parsedTemplate->setCompilable(true);
-        $templateParser = $this->getMock(TemplateParser::class, ['parse']);
-        $templateParser->expects($this->once())->method('parse')->willReturn($parsedTemplate);
-        $context = new RenderingContextFixture();
-        $compiler = $this->getMock(TemplateCompiler::class, ['store', 'get', 'has', 'isUncompilable']);
-        $compiler->expects($this->never())->method('get');
-        $compiler->expects($this->at(0))->method('has')->willReturn(false);
-        $compiler->expects($this->at(1))->method('store')->willThrowException(new \TYPO3Fluid\Fluid\Core\Exception());
-        $compiler->expects($this->at(2))->method('store');
-        $context->setTemplateCompiler($compiler);
-        $context->setVariableProvider(new StandardVariableProvider());
-        $templateParser->setRenderingContext($context);
-        $result = $templateParser->getOrParseAndStoreTemplate('fake-foo-baz', function ($a, $b) {
-            return 'test';
-        });
-        $this->assertSame($parsedTemplate, $result);
-        $this->assertFalse($parsedTemplate->isCompilable());
     }
 
     /**

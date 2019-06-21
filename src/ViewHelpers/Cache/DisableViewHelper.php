@@ -6,8 +6,6 @@ namespace TYPO3Fluid\Fluid\ViewHelpers\Cache;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
@@ -65,22 +63,5 @@ class DisableViewHelper extends AbstractViewHelper
     public function render()
     {
         return $this->renderChildren();
-    }
-
-    /**
-     * @param string $argumentsName
-     * @param string $closureName
-     * @param string $initializationPhpCode
-     * @param ViewHelperNode $node
-     * @param TemplateCompiler $compiler
-     */
-    public function compile(
-        $argumentsName,
-        $closureName,
-        &$initializationPhpCode,
-        ViewHelperNode $node,
-        TemplateCompiler $compiler
-    ) {
-        $compiler->disable();
     }
 }

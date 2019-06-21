@@ -6,10 +6,8 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
@@ -40,72 +38,6 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestcase
         $this->viewHelperNode = $this->getMockBuilder(ViewHelperNode::class)->disableOriginalConstructor()->getMock();
         $this->viewHelper->setViewHelperNode($this->viewHelperNode);
         $this->injectDependenciesIntoViewHelper($this->viewHelper);
-    }
-
-    /**
-     * @test
-     * @dataProvider getCompileTestValues
-     * @param array $childNodes
-     * @param string $expected
-     */
-    public function testCompileReturnsAndAssignsExpectedVariables(array $childNodes, $expected)
-    {
-        $node = new ViewHelperNode($this->renderingContext, 'f', 'if', [], new ParsingState());
-        foreach ($childNodes as $childNode) {
-            $node->addChildNode($childNode);
-        }
-        $compiler = $this->getMock(
-            TemplateCompiler::class,
-            ['wrapChildNodesInClosure', 'wrapViewHelperNodeArgumentEvaluationInClosure']
-        );
-        $compiler->setRenderingContext($this->renderingContext);
-        $compiler->expects($this->any())->method('wrapChildNodesInClosure')->willReturn('closure');
-        $compiler->expects($this->any())->method('wrapViewHelperNodeArgumentEvaluationInClosure')->willReturn('arg-closure');
-        $init = '';
-        $this->viewHelper->compile('foobar-args', 'foobar-closure', $init, $node, $compiler);
-        $this->assertEquals($expected, $init);
-    }
-
-    /**
-     * @return array
-     */
-    public function getCompileTestValues()
-    {
-        $state = new ParsingState();
-        $context = new RenderingContextFixture();
-        return [
-            [
-                [],
-                'foobar-args[\'__thenClosure\'] = foobar-closure;' . chr(10)
-            ],
-            [
-                [new ViewHelperNode($context, 'f', 'then', [], $state)],
-                'foobar-args[\'__thenClosure\'] = closure;' . chr(10)
-            ],
-            [
-                [new ViewHelperNode($context, 'f', 'else', [], $state)],
-                'foobar-args[\'__elseClosures\'][] = closure;' . chr(10)
-            ],
-            [
-                [
-                    new ViewHelperNode($context, 'f', 'then', [], $state),
-                    new ViewHelperNode($context, 'f', 'else', [], $state)
-                ],
-                'foobar-args[\'__thenClosure\'] = closure;' . chr(10) .
-                'foobar-args[\'__elseClosures\'][] = closure;' . chr(10)
-            ],
-            [
-                [
-                    new ViewHelperNode($context, 'f', 'then', [], $state),
-                    new ViewHelperNode($context, 'f', 'else', ['if' => new BooleanNode(new RootNode())], $state),
-                    new ViewHelperNode($context, 'f', 'else', [], $state)
-                ],
-                'foobar-args[\'__thenClosure\'] = closure;' . chr(10) .
-                'foobar-args[\'__elseClosures\'][] = closure;' . chr(10) .
-                'foobar-args[\'__elseifClosures\'][] = arg-closure;' . chr(10) .
-                'foobar-args[\'__elseClosures\'][] = closure;' . chr(10)
-            ],
-        ];
     }
 
     /**

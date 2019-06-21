@@ -7,7 +7,6 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering;
  */
 
 use TYPO3Fluid\Fluid\Core\Cache\FluidCacheInterface;
-use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\ErrorHandler\ErrorHandlerInterface;
 use TYPO3Fluid\Fluid\Core\ErrorHandler\StandardErrorHandler;
 use TYPO3Fluid\Fluid\Core\Parser\Configuration;
@@ -56,11 +55,6 @@ class RenderingContextFixture implements RenderingContextInterface
     public $templateParser;
 
     /**
-     * @var TemplateCompiler
-     */
-    public $templateCompiler;
-
-    /**
      * @var TemplatePaths
      */
     public $templatePaths;
@@ -106,7 +100,6 @@ class RenderingContextFixture implements RenderingContextInterface
         $this->viewHelperResolver = $mockBuilder->getMock(ViewHelperResolver::class, ['dummy']);
         $this->viewHelperInvoker = $mockBuilder->getMock(ViewHelperInvoker::class, ['dummy']);
         $this->templateParser = $mockBuilder->getMock(TemplateParser::class, ['dummy']);
-        $this->templateCompiler = $mockBuilder->getMock(TemplateCompiler::class, ['dummy']);
         $this->templatePaths = $mockBuilder->getMock(TemplatePaths::class, ['dummy']);
         $this->cache = $mockBuilder->getMock(FluidCacheInterface::class);
     }
@@ -218,23 +211,6 @@ class RenderingContextFixture implements RenderingContextInterface
     public function getTemplateParser()
     {
         return $this->templateParser;
-    }
-
-    /**
-     * @param TemplateCompiler $templateCompiler
-     * @return void
-     */
-    public function setTemplateCompiler(TemplateCompiler $templateCompiler)
-    {
-        $this->templateCompiler = $templateCompiler;
-    }
-
-    /**
-     * @return TemplateCompiler
-     */
-    public function getTemplateCompiler()
-    {
-        return $this->templateCompiler;
     }
 
     /**

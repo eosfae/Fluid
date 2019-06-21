@@ -6,7 +6,6 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
@@ -148,22 +147,6 @@ class SwitchViewHelperTest extends ViewHelperBaseTestcase
         $method->setAccessible(true);
         $result = $method->invokeArgs($instance, [[$breakingMatchingCaseNode, $defaultCaseNode]]);
         $this->assertEquals('foo-childcontent', $result);
-    }
-
-    /**
-     * @param ViewHelperNode $node
-     * @param string $expectedCode
-     * @param string $expectedInitialization
-     * @test
-     * @dataProvider getCompileTestValues
-     */
-    public function compileGeneratesExpectedPhpCode(ViewHelperNode $node, $expectedCode, $expectedInitialization)
-    {
-        $viewHelper = new SwitchViewHelper();
-        $compiler = new TemplateCompiler();
-        $code = $viewHelper->compile('$arguments', 'closure', $initializationCode, $node, $compiler);
-        $this->assertEquals($expectedCode, $code);
-        $this->assertEquals($expectedInitialization, $initializationCode);
     }
 
     /**

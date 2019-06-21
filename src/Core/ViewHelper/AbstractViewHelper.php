@@ -6,7 +6,6 @@ namespace TYPO3Fluid\Fluid\Core\ViewHelper;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
@@ -482,28 +481,6 @@ abstract class AbstractViewHelper implements ViewHelperInterface
                 )
             );
         }
-    }
-
-    /**
-     * You only should override this method *when you absolutely know what you
-     * are doing*, and really want to influence the generated PHP code during
-     * template compilation directly.
-     *
-     * @param string $argumentsName
-     * @param string $closureName
-     * @param string $initializationPhpCode
-     * @param ViewHelperNode $node
-     * @param TemplateCompiler $compiler
-     * @return string
-     */
-    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
-    {
-        return sprintf(
-            '%s::renderStatic(%s, %s, $renderingContext)',
-            get_class($this),
-            $argumentsName,
-            $closureName
-        );
     }
 
     /**

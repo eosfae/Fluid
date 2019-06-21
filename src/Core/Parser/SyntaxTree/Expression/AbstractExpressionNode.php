@@ -6,7 +6,6 @@ namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\AbstractNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;

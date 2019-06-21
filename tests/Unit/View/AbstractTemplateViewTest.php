@@ -6,7 +6,6 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\View;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Compiler\AbstractCompiledTemplate;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\ViewHelper\TemplateVariableContainer;
@@ -15,7 +14,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 use TYPO3Fluid\Fluid\View\AbstractTemplateView;
-use TYPO3Fluid\Fluid\View\Exception\InvalidSectionException;
 
 /**
  * Testcase for the TemplateView
@@ -132,43 +130,6 @@ class AbstractTemplateViewTest extends UnitTestCase
     }
 
     /**
-     * @test
-     * @dataProvider getRenderSectionExceptionTestValues
-     * @param boolean $compiled
-     * @test
-     */
-    public function testRenderSectionThrowsExceptionIfSectionMissingAndNotIgnoringUnknown($compiled)
-    {
-        $parsedTemplate = $this->getMockForAbstractClass(
-            AbstractCompiledTemplate::class,
-            [],
-            '',
-            false,
-            false,
-            true,
-            ['isCompiled', 'getVariableContainer']
-        );
-        $parsedTemplate->expects($this->once())->method('isCompiled')->willReturn($compiled);
-        $parsedTemplate->expects($this->any())->method('getVariableContainer')->willReturn(new StandardVariableProvider(
-            ['sections' => []]
-        ));
-        $view = $this->getMockForAbstractClass(
-            AbstractTemplateView::class,
-            [],
-            '',
-            false,
-            false,
-            true,
-            ['getCurrentParsedTemplate', 'getCurrentRenderingType', 'getCurrentRenderingContext']
-        );
-        $view->expects($this->once())->method('getCurrentRenderingContext')->willReturn($this->renderingContext);
-        $view->expects($this->once())->method('getCurrentRenderingType')->willReturn(AbstractTemplateView::RENDERING_LAYOUT);
-        $view->expects($this->once())->method('getCurrentParsedTemplate')->willReturn($parsedTemplate);
-        $this->setExpectedException(InvalidSectionException::class);
-        $view->renderSection('Missing');
-    }
-
-    /**
      * @return array
      */
     public function getRenderSectionExceptionTestValues()
@@ -177,44 +138,6 @@ class AbstractTemplateViewTest extends UnitTestCase
             [true],
             [false]
         ];
-    }
-
-    /**
-     * @test
-     * @dataProvider getRenderSectionCompiledTestValues
-     * @param boolean $exists
-     * @test
-     */
-    public function testRenderSectionOnCompiledTemplate($exists)
-    {
-        if ($exists) {
-            $sectionMethodName = 'section_' . sha1('Section');
-        } else {
-            $sectionMethodName = 'test';
-        }
-        $parsedTemplate = $this->getMockForAbstractClass(
-            AbstractCompiledTemplate::class,
-            [],
-            '',
-            false,
-            false,
-            true,
-            ['isCompiled', 'getVariableContainer', $sectionMethodName]
-        );
-        $parsedTemplate->expects($this->once())->method('isCompiled')->willReturn(true);
-        $view = $this->getMockForAbstractClass(
-            AbstractTemplateView::class,
-            [],
-            '',
-            false,
-            false,
-            true,
-            ['getCurrentParsedTemplate', 'getCurrentRenderingType', 'getCurrentRenderingContext']
-        );
-        $view->expects($this->atLeastOnce())->method('getCurrentRenderingContext')->willReturn($this->renderingContext);
-        $view->expects($this->once())->method('getCurrentRenderingType')->willReturn(AbstractTemplateView::RENDERING_LAYOUT);
-        $view->expects($this->once())->method('getCurrentParsedTemplate')->willReturn($parsedTemplate);
-        $view->renderSection('Section', [], true);
     }
 
     /**

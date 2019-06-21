@@ -6,7 +6,6 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
@@ -165,43 +164,5 @@ class SwitchViewHelper extends AbstractViewHelper
         if ($this->backupBreakState !== false) {
             $this->renderingContext->getViewHelperVariableContainer()->addOrUpdate(SwitchViewHelper::class, 'break', true);
         }
-    }
-
-    /**
-     * Compiles the node structure to a native switch
-     * statement which evaluates closures for each
-     * case comparison and renders child node closures
-     * only when value matches.
-     *
-     * @param string $argumentsName
-     * @param string $closureName
-     * @param string $initializationPhpCode
-     * @param ViewHelperNode $node
-     * @param TemplateCompiler $compiler
-     * @return string
-     */
-    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
-    {
-        $phpCode = 'call_user_func_array(function($arguments) use ($renderingContext, $self) {' . PHP_EOL .
-            'switch ($arguments[\'expression\']) {' . PHP_EOL;
-        foreach ($node->getChildNodes() as $childNode) {
-            if ($this->isDefaultCaseNode($childNode)) {
-                $childrenClosure = $compiler->wrapChildNodesInClosure($childNode);
-                $phpCode .= sprintf('default: return call_user_func(%s);', $childrenClosure) . PHP_EOL;
-            } elseif ($this->isCaseNode($childNode)) {
-                /** @var ViewHelperNode $childNode */
-                $valueClosure = $compiler->wrapViewHelperNodeArgumentEvaluationInClosure($childNode, 'value');
-                $childrenClosure = $compiler->wrapChildNodesInClosure($childNode);
-                $phpCode .= sprintf(
-                    'case call_user_func(%s): return call_user_func(%s);',
-                    $valueClosure,
-                    $childrenClosure,
-                    $compiler->getNodeConverter()->convert($childNode)
-                ) . PHP_EOL;
-            }
-        }
-        $phpCode .= '}' . PHP_EOL;
-        $phpCode .= sprintf('}, array(%s))', $argumentsName);
-        return $phpCode;
     }
 }
